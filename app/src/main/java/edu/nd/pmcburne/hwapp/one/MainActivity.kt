@@ -3,45 +3,26 @@ package edu.nd.pmcburne.hwapp.one
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import edu.nd.pmcburne.hwapp.one.ui.ScoresScreen
+import edu.nd.pmcburne.hwapp.one.ui.ScoresViewModel
+import edu.nd.pmcburne.hwapp.one.ui.ScoresViewModelFactory
 import edu.nd.pmcburne.hwapp.one.ui.theme.HWStarterRepoTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
+        val database = DatabaseModule.create(this)
+        val api = NetworkModule.createService()
+        val repository = ScoresRepository(api = api, db = database)
+        val factory = ScoresViewModelFactory(application = application, repository = repository)
+
         setContent {
             HWStarterRepoTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                val viewModel: ScoresViewModel = viewModel(factory = factory)
+                ScoresScreen(viewModel = viewModel)
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    HWStarterRepoTheme {
-        Greeting("Android")
     }
 }

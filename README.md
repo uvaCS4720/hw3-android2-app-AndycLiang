@@ -1,1 +1,3 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/NYuLn2p4)
+Andy Liang (hdf8xs)
+
+Android App 2 (Basketball Scores) completed according to assignment instructions. Generative AI was used to quickly find relevant components needed and to structure code with design patterns.
