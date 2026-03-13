@@ -38,14 +38,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import edu.nd.pmcburne.hwapp.one.GameEntity
 import edu.nd.pmcburne.hwapp.one.Sport
+import edu.nd.pmcburne.hwapp.one.ui.theme.HwAppDimens
+import edu.nd.pmcburne.hwapp.one.ui.theme.winnerHighlightTextStyle
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -100,7 +101,7 @@ fun ScoresScreen(
                 if (uiState.isRefreshing) {
                     LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
                 } else {
-                    Spacer(modifier = Modifier.height(2.dp))
+                    Spacer(modifier = Modifier.height(HwAppDimens.LoadingSpacerHeight))
                 }
 
                 HorizontalDivider()
@@ -138,7 +139,7 @@ private fun Controls(
 ) {
     val dateFormatter = remember { DateTimeFormatter.ofPattern("MMM d, yyyy") }
 
-    var showDatePicker by remember { mutableStateOf(false) }
+    var showDatePicker by rememberSaveable { mutableStateOf(false) }
     if (showDatePicker) {
         val millis = remember(selectedDate) {
             selectedDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
@@ -171,8 +172,8 @@ private fun Controls(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+            .padding(HwAppDimens.ScreenPadding),
+        verticalArrangement = Arrangement.spacedBy(HwAppDimens.SectionSpacing),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -183,7 +184,7 @@ private fun Controls(
                 Text(selectedDate.format(dateFormatter))
             }
 
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(horizontalArrangement = Arrangement.spacedBy(HwAppDimens.ItemSpacing)) {
                 FilterChip(
                     selected = selectedSport == Sport.Men,
                     onClick = { onSelectSport(Sport.Men) },
@@ -208,7 +209,10 @@ private fun Controls(
             ) {
                 Text(
                     text = "No internet connection. Showing last saved scores.",
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                    modifier = Modifier.padding(
+                        horizontal = HwAppDimens.ScreenPadding,
+                        vertical = HwAppDimens.ItemSpacing,
+                    ),
                     style = MaterialTheme.typography.bodyMedium,
                 )
             }
@@ -222,8 +226,8 @@ private fun GamesList(
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = androidx.compose.foundation.layout.PaddingValues(12.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+        contentPadding = androidx.compose.foundation.layout.PaddingValues(HwAppDimens.ScreenPadding),
+        verticalArrangement = Arrangement.spacedBy(HwAppDimens.SectionSpacing),
     ) {
         items(
             items = games,
@@ -251,30 +255,22 @@ private fun GameCard(
         else -> game.gameState
     }
 
+    val highlightStyle = winnerHighlightTextStyle()
     val awayNameStyle =
-        if (isFinal && game.awayWinner) MaterialTheme.typography.titleMedium.copy(
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary,
-        ) else MaterialTheme.typography.titleMedium
+        if (isFinal && game.awayWinner) highlightStyle else MaterialTheme.typography.titleMedium
     val homeNameStyle =
-        if (isFinal && game.homeWinner) MaterialTheme.typography.titleMedium.copy(
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary,
-        ) else MaterialTheme.typography.titleMedium
+        if (isFinal && game.homeWinner) highlightStyle else MaterialTheme.typography.titleMedium
 
     val awayScoreStyle =
-        if (isFinal && game.awayWinner) MaterialTheme.typography.titleMedium.copy(
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary,
-        ) else MaterialTheme.typography.titleMedium
+        if (isFinal && game.awayWinner) highlightStyle else MaterialTheme.typography.titleMedium
     val homeScoreStyle =
-        if (isFinal && game.homeWinner) MaterialTheme.typography.titleMedium.copy(
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary,
-        ) else MaterialTheme.typography.titleMedium
+        if (isFinal && game.homeWinner) highlightStyle else MaterialTheme.typography.titleMedium
 
     Card(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(
+            modifier = Modifier.padding(HwAppDimens.ScreenPadding),
+            verticalArrangement = Arrangement.spacedBy(HwAppDimens.ItemSpacing),
+        ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,

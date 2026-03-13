@@ -10,6 +10,9 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -32,6 +35,20 @@ private val LightColorScheme = lightColorScheme(
     onSurface = Color(0xFF1C1B1F),
     */
 )
+
+object HwAppDimens {
+    val ScreenPadding = 12.dp
+    val SectionSpacing = 10.dp
+    val ItemSpacing = 8.dp
+    val LoadingSpacerHeight = 2.dp
+}
+
+@Composable
+fun winnerHighlightTextStyle(): TextStyle =
+    MaterialTheme.typography.titleMedium.copy(
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.primary,
+    )
 
 @Composable
 fun HWStarterRepoTheme(
